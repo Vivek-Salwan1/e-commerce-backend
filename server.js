@@ -22,7 +22,7 @@ app.use('/imgs', express.static('imgs'));
 
 
 app.use(cors({
-    origin: ['http://localhost:3000'],
+    origin: ['https://e-commere-frontend.netlify.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }))
