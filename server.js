@@ -18,8 +18,8 @@ const app = express();
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
-app.use('/imgs', express.static('imgs'));
-
+// app.use('/imgs', express.static('imgs'));
+app.use('/imgs', express.static(path.join(__dirname, 'imgs')));
 // 'https://e-commere-frontend.netlify.app', 
 app.use(cors({
     origin: ['https://e-commere-frontend.netlify.app'],
