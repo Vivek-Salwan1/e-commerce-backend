@@ -11,7 +11,7 @@ const UserModel = require('./Models/user');
 const ProductModel = require('./Models/product');
 const CartModel = require('./Models/cart');
 const OrderModel = require('./Models/orders');
-require('dotenv').config({ path: '.env' })
+require('dotenv').config();
 
 const app = express();
 
@@ -317,8 +317,8 @@ app.post('/payment', async (req, res) => {
         const cartItems = cart.cartItems;
 
         const razorpay = new Razorpay({
-            key_id: process.env.RAZORPAY_KEY_ID,
-            key_secret: process.env.RAZORPAY_SECRET
+            key_id: 'rzp_test_WWZE0bebaftNDP',
+            key_secret:'xDkHvOWdhznzOlD21xMOmEwx'
         });
 
         // Create the order in Razorpay
