@@ -98,7 +98,7 @@ app.post('/login', (req, res) => {
 
                             const token = jwt.sign({ name: user.name, email: user.email }, 'jwt-secret-key', { expiresIn: '1d' })
                             res.cookie('token', token)
-                            res.json('logged in')
+                            res.json({massage:'logged in', user:user} )
 
                         } else {
                             return res.json('wrong password')
