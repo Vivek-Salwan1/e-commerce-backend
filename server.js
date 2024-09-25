@@ -300,7 +300,7 @@ app.get('/get-cart-items/:userEmail', async (req, res) => {
 
 
 
-app.post('/payment', async (req, res) => {
+app.post('/payment', async (req, res) => { 
     const { amount, currency, receipt, shippingDetails, userEmail } = req.body;
 
     // Check for missing required fields
@@ -310,7 +310,7 @@ app.post('/payment', async (req, res) => {
 
     try {
         // Fetch cart items for the user
-        const cart = await CartModel.findOne({ userEmail: userEmail });
+        const cart = await CartModel.findOne({ userEmail });
         if (!cart) {
             return res.status(404).json({ message: 'Cart not found for the user' });
         }
@@ -329,7 +329,8 @@ app.post('/payment', async (req, res) => {
         });
 
         if (!order) {
-            return res.status(500).json({ message: 'Error creating order' });
+            console.error('Razorpay order creation failed');
+            return res.status(500).json({ message: 'Error creating Razorpay order' });
         }
 
         // Save the order in the database
@@ -349,12 +350,15 @@ app.post('/payment', async (req, res) => {
         });
 
         // Return the created order
-        res.json(order);
+        return res.json(order);
+
     } catch (err) {
-        console.error('Server error:', err);
-        res.status(500).json({ message: 'Server error' });
+        console.error('Server error:', err.message);  // Log the specific error message
+        console.error('Stack trace:', err.stack);     // Log the full error stack trace for debugging
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
 
 
 
