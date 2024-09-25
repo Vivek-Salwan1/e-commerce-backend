@@ -20,9 +20,9 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use('/imgs', express.static('imgs'));
 
-
+// 'https://e-commere-frontend.netlify.app', 
 app.use(cors({
-    origin: ['https://e-commere-frontend.netlify.app', 'http://localhost:3000'],
+    origin: ['http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }))
@@ -303,10 +303,18 @@ app.get('/get-cart-items/:userEmail', async (req, res) => {
 app.post('/payment', async (req, res) => {
     const { amount, currency, receipt, shippingDetails, userEmail } = req.body;
 
+    // Check for missing required fields
+    if (!amount || !currency || !receipt || !shippingDetails || !userEmail) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
+
     try {
         // Fetch cart items for the user
         const cart = await CartModel.findOne({ userEmail: userEmail });
-        const cartItems = cart ? cart.cartItems : [];
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found for the user' });
+        }
+        const cartItems = cart.cartItems;
 
         const razorpay = new Razorpay({
             key_id: process.env.RAZORPAY_KEY_ID,
@@ -326,7 +334,6 @@ app.post('/payment', async (req, res) => {
 
         // Save the order in the database
         await OrderModel.create({
-
             userEmail: userEmail,
             orderID: order.id,
             paymentStatus: 'Pending', // Initially set as pending
@@ -344,10 +351,11 @@ app.post('/payment', async (req, res) => {
         // Return the created order
         res.json(order);
     } catch (err) {
-        console.error(err);
+        console.error('Server error:', err);
         res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 
 
