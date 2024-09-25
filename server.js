@@ -22,7 +22,7 @@ app.use('/imgs', express.static('imgs'));
 
 
 app.use(cors({
-    origin: ['https://e-commere-frontend.netlify.app'],
+    origin: ['https://e-commere-frontend.netlify.app', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }))
@@ -87,6 +87,7 @@ app.post('/register-user', (req, res) => {
 
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
+
 
     UserModel.findOne({ email: email })
         .then(user => {
